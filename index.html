@@ -1,0 +1,1116 @@
+<!doctype html>
+<html lang="id" class="h-full">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Laporan Survei Kepuasan Masyarakat</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="/_sdk/element_sdk.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;800&amp;family=Source+Sans+Pro:wght@400;600;700&amp;display=swap" rel="stylesheet">
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    
+    html {
+      margin: 0;
+      padding: 0;
+      overflow-x: hidden;
+      width: 100%;
+    }
+    
+    body {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      overflow-x: hidden;
+      width: 100%;
+      max-width: 100%;
+    }
+    
+    :root {
+      --primary-maroon: #5D1A3B;
+      --secondary-surface: #F8F6F4;
+      --text-color: #2D2A32;
+      --accent-gold: #C9A227;
+      --accent-green: #2E7D32;
+    }
+    
+    .font-heading {
+      font-family: 'Playfair Display', serif;
+    }
+    
+    .font-body {
+      font-family: 'Source Sans Pro', sans-serif;
+    }
+    
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    
+    @keyframes slideInLeft {
+      from {
+        opacity: 0;
+        transform: translateX(-30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+    
+    @keyframes scaleIn {
+      from {
+        opacity: 0;
+        transform: scale(0.9);
+      }
+      to {
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
+    
+    @keyframes pulse {
+      0%, 100% {
+        transform: scale(1);
+      }
+      50% {
+        transform: scale(1.05);
+      }
+    }
+    
+    .animate-fade-in-up {
+      animation: fadeInUp 0.8s ease-out forwards;
+    }
+    
+    .animate-slide-in-left {
+      animation: slideInLeft 0.8s ease-out forwards;
+    }
+    
+    .animate-scale-in {
+      animation: scaleIn 0.6s ease-out forwards;
+    }
+    
+    .animate-pulse-slow {
+      animation: pulse 3s ease-in-out infinite;
+    }
+    
+    .delay-100 { animation-delay: 0.1s; }
+    .delay-200 { animation-delay: 0.2s; }
+    .delay-300 { animation-delay: 0.3s; }
+    .delay-400 { animation-delay: 0.4s; }
+    .delay-500 { animation-delay: 0.5s; }
+    
+    .gradient-maroon {
+      background: linear-gradient(135deg, #5D1A3B 0%, #8B2F5C 50%, #5D1A3B 100%);
+    }
+    
+    .gradient-gold {
+      background: linear-gradient(135deg, #C9A227 0%, #E8C547 50%, #C9A227 100%);
+    }
+    
+    .card-hover {
+      transition: all 0.3s ease;
+    }
+    
+    .card-hover:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 20px 40px rgba(93, 26, 59, 0.15);
+    }
+    
+    .stat-card {
+      background: linear-gradient(145deg, #ffffff 0%, #f8f6f4 100%);
+      border: 1px solid rgba(93, 26, 59, 0.1);
+    }
+    
+    .highlight-card {
+      background: linear-gradient(145deg, #2E7D32 0%, #4CAF50 100%);
+    }
+    
+    .table-row-hover:hover {
+      background-color: rgba(93, 26, 59, 0.05);
+    }
+    
+    .progress-bar {
+      transition: width 1.5s ease-out;
+    }
+    
+    .nav-link {
+      position: relative;
+    }
+    
+    .nav-link::after {
+      content: '';
+      position: absolute;
+      bottom: -2px;
+      left: 0;
+      width: 0;
+      height: 2px;
+      background: #C9A227;
+      transition: width 0.3s ease;
+    }
+    
+    .nav-link:hover::after {
+      width: 100%;
+    }
+    
+    .section-divider {
+      background: linear-gradient(90deg, transparent, #C9A227, transparent);
+      height: 2px;
+    }
+    
+    ::-webkit-scrollbar {
+      width: 8px;
+    }
+    
+    ::-webkit-scrollbar-track {
+      background: #F8F6F4;
+    }
+    
+    ::-webkit-scrollbar-thumb {
+      background: #5D1A3B;
+      border-radius: 4px;
+    }
+    
+    ::-webkit-scrollbar-thumb:hover {
+      background: #8B2F5C;
+    }
+    
+    /* Mobile-first responsive utilities */
+    .mobile-container {
+      width: 100%;
+      max-width: 100%;
+      overflow-x: hidden;
+    }
+    
+    @media (max-width: 768px) {
+      .max-w-7xl {
+        max-width: 100%;
+      }
+      
+      table {
+        font-size: 0.75rem;
+      }
+      
+      canvas {
+        max-width: 100% !important;
+        height: auto !important;
+      }
+      
+      .stat-card {
+        margin-left: 0;
+        margin-right: 0;
+      }
+      
+      /* Prevent any element from exceeding viewport */
+      img, svg, canvas, iframe, video {
+        max-width: 100%;
+        height: auto;
+      }
+      
+      /* Adjust grid for mobile */
+      .grid {
+        grid-template-columns: 1fr;
+      }
+      
+      /* Better text sizing for mobile */
+      h1 {
+        font-size: 1.75rem !important;
+        line-height: 1.2;
+      }
+      
+      h2 {
+        font-size: 1.5rem !important;
+        line-height: 1.3;
+      }
+      
+      h3 {
+        font-size: 1.125rem !important;
+      }
+      
+      /* Compact padding for mobile */
+      .py-12 {
+        padding-top: 2rem !important;
+        padding-bottom: 2rem !important;
+      }
+      
+      .py-24 {
+        padding-top: 3rem !important;
+        padding-bottom: 3rem !important;
+      }
+      
+      .p-6 {
+        padding: 1rem !important;
+      }
+      
+      .p-8 {
+        padding: 1.25rem !important;
+      }
+      
+      .p-12 {
+        padding: 1.5rem !important;
+      }
+      
+      /* Responsive text sizes */
+      .text-5xl {
+        font-size: 2.5rem !important;
+      }
+      
+      .text-6xl {
+        font-size: 3rem !important;
+      }
+      
+      .text-7xl {
+        font-size: 3.5rem !important;
+      }
+    }
+    
+    @media (max-width: 640px) {
+      .px-3 {
+        padding-left: 0.75rem !important;
+        padding-right: 0.75rem !important;
+      }
+      
+      /* Ultra compact for small screens */
+      .text-5xl {
+        font-size: 2rem !important;
+      }
+      
+      .text-6xl {
+        font-size: 2.25rem !important;
+      }
+      
+      .text-7xl {
+        font-size: 2.5rem !important;
+      }
+      
+      /* Ensure tables don't overflow */
+      .overflow-x-auto {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        max-width: 100%;
+      }
+      
+      table {
+        min-width: 100%;
+        display: block;
+        overflow-x: auto;
+      }
+      
+      tbody, thead {
+        display: table;
+        width: 100%;
+      }
+    }
+  </style>
+  <style>@view-transition { navigation: auto; }</style>
+  <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
+ </head>
+ <body class="h-full font-body bg-white text-gray-800 overflow-auto overflow-x-hidden m-0 p-0">
+  <div id="app-wrapper" class="w-full min-h-full m-0 p-0 overflow-x-hidden mobile-container"><!-- Navigation -->
+   <nav class="gradient-maroon sticky top-0 z-50 shadow-lg">
+    <div class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
+     <div class="flex items-center justify-between h-16">
+      <div class="flex items-center space-x-3">
+       <div class="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center">
+        <svg class="w-6 h-6 text-white" fill="currentColor" viewbox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" />
+        </svg>
+       </div><span class="text-white font-heading font-bold text-lg">Laporan SKM</span>
+      </div>
+      <div class="hidden md:flex items-center space-x-6"><a href="#profil" class="nav-link text-white/90 hover:text-white text-sm font-medium transition-colors">Profil</a> <a href="#metodologi" class="nav-link text-white/90 hover:text-white text-sm font-medium transition-colors">Metodologi</a> <a href="#hasil" class="nav-link text-white/90 hover:text-white text-sm font-medium transition-colors">Hasil</a> <a href="#analisis" class="nav-link text-white/90 hover:text-white text-sm font-medium transition-colors">Analisis</a> <a href="#rekomendasi" class="nav-link text-white/90 hover:text-white text-sm font-medium transition-colors">Rekomendasi</a>
+      </div>
+      <div class="flex items-center space-x-2"><span id="nav-year" class="text-white/70 text-sm">Triwulan IV - 2025</span>
+       <div class="w-2 h-2 rounded-full bg-green-400 animate-pulse"></div>
+      </div>
+     </div>
+    </div>
+   </nav><!-- Hero Section -->
+   <section class="gradient-maroon relative overflow-hidden">
+    <div class="absolute inset-0 opacity-10">
+     <svg class="w-full h-full" viewbox="0 0 100 100" preserveaspectratio="none"><defs>
+       <pattern id="grid" width="10" height="10" patternunits="userSpaceOnUse">
+        <path d="M 10 0 L 0 0 0 10" fill="none" stroke="white" stroke-width="0.5" />
+       </pattern>
+      </defs> <rect width="100" height="100" fill="url(#grid)" />
+     </svg>
+    </div>
+    <div class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-12 md:py-24 relative">
+     <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+      <div class="text-center md:text-left">
+       <div class="inline-flex items-center px-4 py-2 rounded-full bg-white/10 backdrop-blur-sm mb-6 animate-fade-in-up"><span class="w-2 h-2 rounded-full bg-green-400 mr-2"></span> <span class="text-white/90 text-sm font-medium">Laporan Resmi</span>
+       </div>
+       <h1 id="hero-title" class="font-heading text-3xl sm:text-4xl lg:text-5xl font-bold text-white leading-tight mb-6 animate-fade-in-up delay-100">Laporan Hasil Survei Kepuasan Masyarakat</h1>
+       <p id="hero-subtitle" class="text-lg sm:text-xl text-white/80 mb-8 animate-fade-in-up delay-200">Dinas Kependudukan dan Pencatatan Sipil Kabupaten Kepulauan Tanimbar</p>
+       <div class="flex flex-wrap gap-4 justify-center md:justify-start animate-fade-in-up delay-300">
+        <div class="flex items-center space-x-2 bg-white/10 backdrop-blur-sm px-4 py-2 rounded-lg">
+         <svg class="w-5 h-5 text-yellow-400" fill="currentColor" viewbox="0 0 20 20"><path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd" />
+         </svg><span class="text-white font-semibold">Triwulan IV Tahun 2025</span>
+        </div>
+        <div class="flex items-center space-x-2 bg-white/10 backdrop-blur-sm px-4 py-2 rounded-lg">
+         <svg class="w-5 h-5 text-yellow-400" fill="currentColor" viewbox="0 0 20 20"><path d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z" />
+         </svg><span class="text-white font-semibold">440 Responden</span>
+        </div>
+        <div class="flex items-center space-x-2 bg-white/10 backdrop-blur-sm px-4 py-2 rounded-lg">
+         <svg class="w-5 h-5 text-green-400" fill="currentColor" viewbox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+         </svg><span class="text-white font-semibold">Mutu: BAIK</span>
+        </div>
+       </div>
+      </div>
+      <div class="relative animate-scale-in delay-400">
+       <div class="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20">
+        <div class="text-center mb-4"><span class="text-white/70 text-sm uppercase tracking-wider">Indeks Kepuasan</span>
+        </div>
+        <div class="relative w-48 h-48 mx-auto mb-4">
+         <svg class="w-full h-full transform -rotate-90" viewbox="0 0 100 100"><circle cx="50" cy="50" r="45" fill="none" stroke="rgba(255,255,255,0.2)" stroke-width="8" /> <circle cx="50" cy="50" r="45" fill="none" stroke="#C9A227" stroke-width="8" stroke-dasharray="230.38" stroke-dashoffset="42.5" stroke-linecap="round" />
+         </svg>
+         <div class="absolute inset-0 flex flex-col items-center justify-center"><span class="text-5xl font-heading font-bold text-white">81,52</span> <span class="text-white/70 text-sm mt-1">dari 100</span>
+         </div>
+        </div>
+        <div class="flex justify-center"><span class="px-4 py-2 rounded-full bg-green-500 text-white font-bold text-sm uppercase tracking-wider animate-pulse-slow"> ✓ Kategori BAIK </span>
+        </div>
+       </div><!-- Decorative elements -->
+       <div class="absolute -top-4 -right-4 w-20 h-20 bg-yellow-400/20 rounded-full blur-2xl"></div>
+       <div class="absolute -bottom-4 -left-4 w-16 h-16 bg-green-400/20 rounded-full blur-2xl"></div>
+      </div>
+     </div>
+    </div><!-- Wave divider -->
+    <div class="absolute bottom-0 left-0 right-0">
+     <svg viewbox="0 0 1440 120" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M0 120L60 110C120 100 240 80 360 70C480 60 600 60 720 65C840 70 960 80 1080 85C1200 90 1320 90 1380 90L1440 90V120H1380C1320 120 1200 120 1080 120C960 120 840 120 720 120C600 120 480 120 360 120C240 120 120 120 60 120H0Z" fill="#F8F6F4" />
+     </svg>
+    </div>
+   </section><!-- Profil Responden Section -->
+   <section id="profil" class="bg-[#F8F6F4] py-12 md:py-24">
+    <div class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
+     <div class="text-center mb-12"><span class="inline-block px-4 py-1 rounded-full bg-[#5D1A3B]/10 text-[#5D1A3B] text-sm font-semibold mb-4">PROFIL RESPONDEN</span>
+      <h2 class="font-heading text-3xl md:text-4xl font-bold text-[#2D2A32] mb-4">Karakteristik Responden Survei</h2>
+      <p class="text-gray-600 max-w-2xl mx-auto">Data demografis responden yang berpartisipasi dalam survei kepuasan masyarakat</p>
+     </div>
+     <div class="grid grid-cols-1 lg:grid-cols-3 gap-8"><!-- Jenis Kelamin Card -->
+      <div class="stat-card rounded-2xl p-6 card-hover animate-fade-in-up">
+       <div class="flex items-center justify-between mb-6">
+        <h3 class="font-heading text-xl font-bold text-[#2D2A32]">Jenis Kelamin</h3>
+        <div class="w-10 h-10 rounded-full bg-[#5D1A3B]/10 flex items-center justify-center">
+         <svg class="w-5 h-5 text-[#5D1A3B]" fill="currentColor" viewbox="0 0 20 20"><path d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z" />
+         </svg>
+        </div>
+       </div>
+       <div class="flex justify-center mb-6">
+        <div style="position: relative; width: 100%; max-width: 200px; margin: 0 auto;">
+         <canvas id="genderChart"></canvas>
+        </div>
+       </div>
+       <div class="space-y-3">
+        <div class="flex items-center justify-between p-3 bg-[#5D1A3B]/5 rounded-lg">
+         <div class="flex items-center space-x-3">
+          <div class="w-3 h-3 rounded-full bg-[#5D1A3B]"></div><span class="text-gray-700">Laki-laki</span>
+         </div><span class="font-bold text-[#5D1A3B]">167 <span class="text-sm font-normal text-gray-500">(38%)</span></span>
+        </div>
+        <div class="flex items-center justify-between p-3 bg-[#C9A227]/10 rounded-lg">
+         <div class="flex items-center space-x-3">
+          <div class="w-3 h-3 rounded-full bg-[#C9A227]"></div><span class="text-gray-700">Perempuan</span>
+         </div><span class="font-bold text-[#C9A227]">273 <span class="text-sm font-normal text-gray-500">(62%)</span></span>
+        </div>
+       </div>
+       <div class="mt-4 pt-4 border-t border-gray-200">
+        <div class="flex items-center justify-between"><span class="text-gray-600">Total Responden</span> <span class="text-2xl font-heading font-bold text-[#5D1A3B]">440</span>
+        </div>
+       </div>
+      </div><!-- Pendidikan Card -->
+      <div class="stat-card rounded-2xl p-6 card-hover animate-fade-in-up delay-100">
+       <div class="flex items-center justify-between mb-6">
+        <h3 class="font-heading text-xl font-bold text-[#2D2A32]">Tingkat Pendidikan</h3>
+        <div class="w-10 h-10 rounded-full bg-[#5D1A3B]/10 flex items-center justify-center">
+         <svg class="w-5 h-5 text-[#5D1A3B]" fill="currentColor" viewbox="0 0 20 20"><path d="M10.394 2.08a1 1 0 00-.788 0l-7 3a1 1 0 000 1.84L5.25 8.051a.999.999 0 01.356-.257l4-1.714a1 1 0 11.788 1.838L7.667 9.088l1.94.831a1 1 0 00.787 0l7-3a1 1 0 000-1.838l-7-3zM3.31 9.397L5 10.12v4.102a8.969 8.969 0 00-1.05-.174 1 1 0 01-.89-.89 11.115 11.115 0 01.25-3.762zM9.3 16.573A9.026 9.026 0 007 14.935v-3.957l1.818.78a3 3 0 002.364 0l5.508-2.361a11.026 11.026 0 01.25 3.762 1 1 0 01-.89.89 8.968 8.968 0 00-5.35 2.524 1 1 0 01-1.4 0z" />
+         </svg>
+        </div>
+       </div>
+       <div class="space-y-3">
+        <div class="group">
+         <div class="flex justify-between text-sm mb-1"><span class="text-gray-600">SD</span> <span class="font-semibold text-[#5D1A3B]">2</span>
+         </div>
+         <div class="h-2 bg-gray-200 rounded-full overflow-hidden">
+          <div class="h-full bg-[#5D1A3B] rounded-full progress-bar" style="width: 1%"></div>
+         </div>
+        </div>
+        <div class="group">
+         <div class="flex justify-between text-sm mb-1"><span class="text-gray-600">SMP</span> <span class="font-semibold text-[#5D1A3B]">3</span>
+         </div>
+         <div class="h-2 bg-gray-200 rounded-full overflow-hidden">
+          <div class="h-full bg-[#5D1A3B] rounded-full progress-bar" style="width: 2%"></div>
+         </div>
+        </div>
+        <div class="group">
+         <div class="flex justify-between text-sm mb-1"><span class="text-gray-600">SMA</span> <span class="font-semibold text-[#5D1A3B]">167</span>
+         </div>
+         <div class="h-2 bg-gray-200 rounded-full overflow-hidden">
+          <div class="h-full bg-[#5D1A3B] rounded-full progress-bar" style="width: 38%"></div>
+         </div>
+        </div>
+        <div class="group">
+         <div class="flex justify-between text-sm mb-1"><span class="text-gray-600">D3</span> <span class="font-semibold text-[#C9A227]">72</span>
+         </div>
+         <div class="h-2 bg-gray-200 rounded-full overflow-hidden">
+          <div class="h-full bg-[#C9A227] rounded-full progress-bar" style="width: 16%"></div>
+         </div>
+        </div>
+        <div class="group">
+         <div class="flex justify-between text-sm mb-1"><span class="text-gray-600">S1</span> <span class="font-semibold text-[#2E7D32]">189</span>
+         </div>
+         <div class="h-2 bg-gray-200 rounded-full overflow-hidden">
+          <div class="h-full bg-[#2E7D32] rounded-full progress-bar" style="width: 43%"></div>
+         </div>
+        </div>
+        <div class="group">
+         <div class="flex justify-between text-sm mb-1"><span class="text-gray-600">S2</span> <span class="font-semibold text-[#5D1A3B]">7</span>
+         </div>
+         <div class="h-2 bg-gray-200 rounded-full overflow-hidden">
+          <div class="h-full bg-[#5D1A3B] rounded-full progress-bar" style="width: 2%"></div>
+         </div>
+        </div>
+        <div class="group">
+         <div class="flex justify-between text-sm mb-1"><span class="text-gray-600">S3</span> <span class="font-semibold text-gray-400">0</span>
+         </div>
+         <div class="h-2 bg-gray-200 rounded-full overflow-hidden">
+          <div class="h-full bg-gray-300 rounded-full progress-bar" style="width: 0%"></div>
+         </div>
+        </div>
+       </div>
+       <div class="mt-4 pt-4 border-t border-gray-200 flex items-center justify-between"><span class="text-sm text-gray-500">Mayoritas</span> <span class="px-3 py-1 bg-[#2E7D32]/10 text-[#2E7D32] rounded-full text-sm font-semibold">S1 (43%)</span>
+       </div>
+      </div><!-- Pekerjaan Card -->
+      <div class="stat-card rounded-2xl p-6 card-hover animate-fade-in-up delay-200">
+       <div class="flex items-center justify-between mb-6">
+        <h3 class="font-heading text-xl font-bold text-[#2D2A32]">Jenis Pekerjaan</h3>
+        <div class="w-10 h-10 rounded-full bg-[#5D1A3B]/10 flex items-center justify-center">
+         <svg class="w-5 h-5 text-[#5D1A3B]" fill="currentColor" viewbox="0 0 20 20"><path fill-rule="evenodd" d="M6 6V5a3 3 0 013-3h2a3 3 0 013 3v1h2a2 2 0 012 2v3.57A22.952 22.952 0 0110 13a22.95 22.95 0 01-8-1.43V8a2 2 0 012-2h2zm2-1a1 1 0 011-1h2a1 1 0 011 1v1H8V5zm1 5a1 1 0 011-1h.01a1 1 0 110 2H10a1 1 0 01-1-1z" clip-rule="evenodd" /> <path d="M2 13.692V16a2 2 0 002 2h12a2 2 0 002-2v-2.308A24.974 24.974 0 0110 15c-2.796 0-5.487-.46-8-1.308z" />
+         </svg>
+        </div>
+       </div>
+       <div class="grid grid-cols-2 gap-3">
+        <div class="p-3 bg-[#5D1A3B]/5 rounded-xl text-center card-hover">
+         <div class="w-10 h-10 mx-auto mb-2 rounded-full bg-[#5D1A3B]/10 flex items-center justify-center"><span class="text-lg">👔</span>
+         </div><span class="block text-2xl font-bold text-[#5D1A3B]">99</span> <span class="text-xs text-gray-600">PNS</span>
+        </div>
+        <div class="p-3 bg-[#2E7D32]/5 rounded-xl text-center card-hover">
+         <div class="w-10 h-10 mx-auto mb-2 rounded-full bg-[#2E7D32]/10 flex items-center justify-center"><span class="text-lg">🎖️</span>
+         </div><span class="block text-2xl font-bold text-[#2E7D32]">3</span> <span class="text-xs text-gray-600">TNI</span>
+        </div>
+        <div class="p-3 bg-blue-50 rounded-xl text-center card-hover">
+         <div class="w-10 h-10 mx-auto mb-2 rounded-full bg-blue-100 flex items-center justify-center"><span class="text-lg">👮</span>
+         </div><span class="block text-2xl font-bold text-blue-600">3</span> <span class="text-xs text-gray-600">POLRI</span>
+        </div>
+        <div class="p-3 bg-[#C9A227]/10 rounded-xl text-center card-hover">
+         <div class="w-10 h-10 mx-auto mb-2 rounded-full bg-[#C9A227]/20 flex items-center justify-center"><span class="text-lg">🏢</span>
+         </div><span class="block text-2xl font-bold text-[#C9A227]">45</span> <span class="text-xs text-gray-600">Swasta</span>
+        </div>
+        <div class="p-3 bg-purple-50 rounded-xl text-center card-hover">
+         <div class="w-10 h-10 mx-auto mb-2 rounded-full bg-purple-100 flex items-center justify-center"><span class="text-lg">🏪</span>
+         </div><span class="block text-2xl font-bold text-purple-600">19</span> <span class="text-xs text-gray-600">Wirausaha</span>
+        </div>
+        <div class="p-3 bg-gray-100 rounded-xl text-center card-hover">
+         <div class="w-10 h-10 mx-auto mb-2 rounded-full bg-gray-200 flex items-center justify-center"><span class="text-lg">📋</span>
+         </div><span class="block text-2xl font-bold text-gray-700">271</span> <span class="text-xs text-gray-600">Lainnya</span>
+        </div>
+       </div>
+       <div class="mt-4 pt-4 border-t border-gray-200 flex items-center justify-between"><span class="text-sm text-gray-500">Kategori Terbanyak</span> <span class="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-sm font-semibold">Lainnya (62%)</span>
+       </div>
+      </div>
+     </div>
+    </div>
+   </section><!-- Metodologi Section -->
+   <section id="metodologi" class="bg-white py-12 md:py-24">
+    <div class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
+     <div class="text-center mb-12"><span class="inline-block px-4 py-1 rounded-full bg-[#5D1A3B]/10 text-[#5D1A3B] text-sm font-semibold mb-4">METODOLOGI</span>
+      <h2 class="font-heading text-3xl md:text-4xl font-bold text-[#2D2A32] mb-4">Metodologi Survei</h2>
+      <p class="text-gray-600 max-w-2xl mx-auto">Pendekatan dan standar yang digunakan dalam pelaksanaan survei kepuasan masyarakat</p>
+     </div>
+     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div class="stat-card rounded-2xl p-6 text-center card-hover animate-fade-in-up">
+       <div class="w-16 h-16 mx-auto mb-4 rounded-2xl gradient-maroon flex items-center justify-center">
+        <svg class="w-8 h-8 text-white" fill="currentColor" viewbox="0 0 20 20"><path d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z" />
+        </svg>
+       </div><span class="block text-4xl font-heading font-bold text-[#5D1A3B] mb-2">440</span> <span class="text-gray-600">Total Responden</span>
+      </div>
+      <div class="stat-card rounded-2xl p-6 text-center card-hover animate-fade-in-up delay-100">
+       <div class="w-16 h-16 mx-auto mb-4 rounded-2xl gradient-gold flex items-center justify-center">
+        <svg class="w-8 h-8 text-white" fill="currentColor" viewbox="0 0 20 20"><path fill-rule="evenodd" d="M3 3a1 1 0 000 2v8a2 2 0 002 2h2.586l-1.293 1.293a1 1 0 101.414 1.414L10 15.414l2.293 2.293a1 1 0 001.414-1.414L12.414 15H15a2 2 0 002-2V5a1 1 0 100-2H3zm11.707 4.707a1 1 0 00-1.414-1.414L10 9.586 8.707 8.293a1 1 0 00-1.414 0l-2 2a1 1 0 101.414 1.414L8 10.414l1.293 1.293a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+        </svg>
+       </div><span class="block text-4xl font-heading font-bold text-[#C9A227] mb-2">1-4</span> <span class="text-gray-600">Skala Likert</span>
+      </div>
+      <div class="stat-card rounded-2xl p-6 text-center card-hover animate-fade-in-up delay-200">
+       <div class="w-16 h-16 mx-auto mb-4 rounded-2xl bg-[#2E7D32] flex items-center justify-center">
+        <svg class="w-8 h-8 text-white" fill="currentColor" viewbox="0 0 20 20"><path fill-rule="evenodd" d="M4 4a2 2 0 012-2h8a2 2 0 012 2v12a1 1 0 110 2h-3a1 1 0 01-1-1v-2a1 1 0 00-1-1H9a1 1 0 00-1 1v2a1 1 0 01-1 1H4a1 1 0 110-2V4zm3 1h2v2H7V5zm2 4H7v2h2V9zm2-4h2v2h-2V5zm2 4h-2v2h2V9z" clip-rule="evenodd" />
+        </svg>
+       </div><span class="block text-4xl font-heading font-bold text-[#2E7D32] mb-2">11</span> <span class="text-gray-600">Unsur Pelayanan</span>
+      </div>
+      <div class="stat-card rounded-2xl p-6 text-center card-hover animate-fade-in-up delay-300">
+       <div class="w-16 h-16 mx-auto mb-4 rounded-2xl bg-[#5D1A3B] flex items-center justify-center">
+        <svg class="w-8 h-8 text-white" fill="currentColor" viewbox="0 0 20 20"><path fill-rule="evenodd" d="M10 2a1 1 0 011 1v1.323l3.954 1.582 1.599-.8a1 1 0 01.894 1.79l-1.233.616 1.738 5.42a1 1 0 01-.285 1.05A3.989 3.989 0 0115 15a3.989 3.989 0 01-2.667-1.019 1 1 0 01-.285-1.05l1.715-5.349L11 6.477V16h2a1 1 0 110 2H7a1 1 0 110-2h2V6.477L6.237 7.582l1.715 5.349a1 1 0 01-.285 1.05A3.989 3.989 0 015 15a3.989 3.989 0 01-2.667-1.019 1 1 0 01-.285-1.05l1.738-5.42-1.233-.617a1 1 0 01.894-1.788l1.599.799L9 4.323V3a1 1 0 011-1z" clip-rule="evenodd" />
+        </svg>
+       </div><span class="block text-sm font-heading font-bold text-[#5D1A3B] mb-2">PermenPANRB</span> <span class="text-gray-600">Acuan Regulasi</span>
+      </div>
+     </div>
+     <div class="mt-12 stat-card rounded-2xl p-8">
+      <h3 class="font-heading text-xl font-bold text-[#2D2A32] mb-6">11 Unsur Pelayanan yang Dinilai</h3>
+      <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+       <div class="flex items-center space-x-3 p-3 bg-[#5D1A3B]/5 rounded-lg"><span class="w-8 h-8 rounded-full bg-[#5D1A3B] text-white flex items-center justify-center text-sm font-bold">U1</span> <span class="text-gray-700 text-sm">Persyaratan Pelayanan</span>
+       </div>
+       <div class="flex items-center space-x-3 p-3 bg-[#5D1A3B]/5 rounded-lg"><span class="w-8 h-8 rounded-full bg-[#5D1A3B] text-white flex items-center justify-center text-sm font-bold">U2</span> <span class="text-gray-700 text-sm">Prosedur Pelayanan</span>
+       </div>
+       <div class="flex items-center space-x-3 p-3 bg-[#5D1A3B]/5 rounded-lg"><span class="w-8 h-8 rounded-full bg-[#5D1A3B] text-white flex items-center justify-center text-sm font-bold">U3</span> <span class="text-gray-700 text-sm">Waktu Pelayanan</span>
+       </div>
+       <div class="flex items-center space-x-3 p-3 bg-[#2E7D32]/10 rounded-lg"><span class="w-8 h-8 rounded-full bg-[#2E7D32] text-white flex items-center justify-center text-sm font-bold">U4</span> <span class="text-gray-700 text-sm">Biaya/Tarif</span>
+       </div>
+       <div class="flex items-center space-x-3 p-3 bg-[#5D1A3B]/5 rounded-lg"><span class="w-8 h-8 rounded-full bg-[#5D1A3B] text-white flex items-center justify-center text-sm font-bold">U5</span> <span class="text-gray-700 text-sm">Produk Layanan</span>
+       </div>
+       <div class="flex items-center space-x-3 p-3 bg-[#5D1A3B]/5 rounded-lg"><span class="w-8 h-8 rounded-full bg-[#5D1A3B] text-white flex items-center justify-center text-sm font-bold">U6</span> <span class="text-gray-700 text-sm">Kompetensi Pelaksana</span>
+       </div>
+       <div class="flex items-center space-x-3 p-3 bg-[#5D1A3B]/5 rounded-lg"><span class="w-8 h-8 rounded-full bg-[#5D1A3B] text-white flex items-center justify-center text-sm font-bold">U7</span> <span class="text-gray-700 text-sm">Perilaku Pelaksana</span>
+       </div>
+       <div class="flex items-center space-x-3 p-3 bg-[#5D1A3B]/5 rounded-lg"><span class="w-8 h-8 rounded-full bg-[#5D1A3B] text-white flex items-center justify-center text-sm font-bold">U8</span> <span class="text-gray-700 text-sm">Sarana dan Prasarana</span>
+       </div>
+       <div class="flex items-center space-x-3 p-3 bg-red-50 rounded-lg"><span class="w-8 h-8 rounded-full bg-red-500 text-white flex items-center justify-center text-sm font-bold">U9</span> <span class="text-gray-700 text-sm">Penanganan Pengaduan</span>
+       </div>
+       <div class="flex items-center space-x-3 p-3 bg-[#2E7D32]/10 rounded-lg"><span class="w-8 h-8 rounded-full bg-[#2E7D32] text-white flex items-center justify-center text-sm font-bold">U10</span> <span class="text-gray-700 text-sm">Kesesuaian Layanan</span>
+       </div>
+       <div class="flex items-center space-x-3 p-3 bg-[#5D1A3B]/5 rounded-lg"><span class="w-8 h-8 rounded-full bg-[#5D1A3B] text-white flex items-center justify-center text-sm font-bold">U11</span> <span class="text-gray-700 text-sm">Keamanan Layanan</span>
+       </div>
+      </div>
+     </div>
+    </div>
+   </section><!-- Hasil Penilaian Section -->
+   <section id="hasil" class="bg-[#F8F6F4] py-12 md:py-24">
+    <div class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
+     <div class="text-center mb-12"><span class="inline-block px-4 py-1 rounded-full bg-[#5D1A3B]/10 text-[#5D1A3B] text-sm font-semibold mb-4">HASIL SURVEI</span>
+      <h2 class="font-heading text-3xl md:text-4xl font-bold text-[#2D2A32] mb-4">Hasil Penilaian Per Unsur</h2>
+      <p class="text-gray-600 max-w-2xl mx-auto">Nilai Rata-rata Tertimbang (NRR) untuk setiap unsur pelayanan</p>
+     </div>
+     <div class="grid grid-cols-1 lg:grid-cols-2 gap-8"><!-- Chart -->
+      <div class="stat-card rounded-2xl p-6 card-hover">
+       <h3 class="font-heading text-xl font-bold text-[#2D2A32] mb-6">Grafik NRR Per Unsur</h3>
+       <div class="relative" style="height: 350px;">
+        <canvas id="nrrChart"></canvas>
+       </div>
+      </div><!-- Table -->
+      <div class="stat-card rounded-2xl p-6 card-hover">
+       <h3 class="font-heading text-xl font-bold text-[#2D2A32] mb-6">Tabel Nilai NRR</h3>
+       <div class="overflow-x-auto" style="max-width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch;">
+        <table class="w-full" style="min-width: 600px;">
+         <thead>
+          <tr class="border-b-2 border-[#5D1A3B]/20">
+           <th class="text-left py-3 px-4 text-sm font-semibold text-[#5D1A3B]">Unsur</th>
+           <th class="text-left py-3 px-4 text-sm font-semibold text-[#5D1A3B]">Pertanyaan Survei</th>
+           <th class="text-right py-3 px-4 text-sm font-semibold text-[#5D1A3B]">NRR</th>
+           <th class="text-center py-3 px-4 text-sm font-semibold text-[#5D1A3B]">Status</th>
+          </tr>
+         </thead>
+         <tbody>
+          <tr class="table-row-hover border-b border-gray-100">
+           <td class="py-3 px-4"><span class="w-8 h-8 inline-flex items-center justify-center rounded-full bg-[#5D1A3B]/10 text-[#5D1A3B] text-xs font-bold">U1</span></td>
+           <td class="py-3 px-4 text-sm text-gray-700">Bagaimana pendapat Saudara tentang kesesuaian persyaratan pelayanan dengan jenis pelayanannya</td>
+           <td class="py-3 px-4 text-right font-semibold">3.277</td>
+           <td class="py-3 px-4 text-center"><span class="px-2 py-1 rounded-full bg-[#2E7D32]/10 text-[#2E7D32] text-xs font-semibold">Baik</span></td>
+          </tr>
+          <tr class="table-row-hover border-b border-gray-100">
+           <td class="py-3 px-4"><span class="w-8 h-8 inline-flex items-center justify-center rounded-full bg-[#5D1A3B]/10 text-[#5D1A3B] text-xs font-bold">U2</span></td>
+           <td class="py-3 px-4 text-sm text-gray-700">Bagaimana pemahaman Saudara tentang kemudahan prosedur pelayanan di unit ini</td>
+           <td class="py-3 px-4 text-right font-semibold">3.220</td>
+           <td class="py-3 px-4 text-center"><span class="px-2 py-1 rounded-full bg-[#2E7D32]/10 text-[#2E7D32] text-xs font-semibold">Baik</span></td>
+          </tr>
+          <tr class="table-row-hover border-b border-gray-100">
+           <td class="py-3 px-4"><span class="w-8 h-8 inline-flex items-center justify-center rounded-full bg-[#5D1A3B]/10 text-[#5D1A3B] text-xs font-bold">U3</span></td>
+           <td class="py-3 px-4 text-sm text-gray-700">Bagaimana pendapat Saudara tentang kecepatan waktu dalam memberikan pelayanan</td>
+           <td class="py-3 px-4 text-right font-semibold">3.095</td>
+           <td class="py-3 px-4 text-center"><span class="px-2 py-1 rounded-full bg-[#C9A227]/10 text-[#C9A227] text-xs font-semibold">Cukup</span></td>
+          </tr>
+          <tr class="table-row-hover border-b border-gray-100 bg-[#2E7D32]/5">
+           <td class="py-3 px-4"><span class="w-8 h-8 inline-flex items-center justify-center rounded-full bg-[#2E7D32] text-white text-xs font-bold">U4</span></td>
+           <td class="py-3 px-4 text-sm text-gray-700 font-semibold">Bagaimana pendapat Saudara tentang kewajaran biaya/tarif dalam pelayanan</td>
+           <td class="py-3 px-4 text-right font-bold text-[#2E7D32]">3.620 ⬆️</td>
+           <td class="py-3 px-4 text-center"><span class="px-2 py-1 rounded-full bg-[#2E7D32] text-white text-xs font-semibold">Tertinggi</span></td>
+          </tr>
+          <tr class="table-row-hover border-b border-gray-100">
+           <td class="py-3 px-4"><span class="w-8 h-8 inline-flex items-center justify-center rounded-full bg-[#5D1A3B]/10 text-[#5D1A3B] text-xs font-bold">U5</span></td>
+           <td class="py-3 px-4 text-sm text-gray-700">Bagaimana pendapat Saudara tentang kesesuaian produk pelayanan antara yang tercantum dalam standar pelayanan dengan hasil yang diberikan</td>
+           <td class="py-3 px-4 text-right font-semibold">3.248</td>
+           <td class="py-3 px-4 text-center"><span class="px-2 py-1 rounded-full bg-[#2E7D32]/10 text-[#2E7D32] text-xs font-semibold">Baik</span></td>
+          </tr>
+          <tr class="table-row-hover border-b border-gray-100">
+           <td class="py-3 px-4"><span class="w-8 h-8 inline-flex items-center justify-center rounded-full bg-[#5D1A3B]/10 text-[#5D1A3B] text-xs font-bold">U6</span></td>
+           <td class="py-3 px-4 text-sm text-gray-700">Bagaimana pendapat Saudara tentang kompetensi/kemampuan petugas dalam pelayanan</td>
+           <td class="py-3 px-4 text-right font-semibold">3.307</td>
+           <td class="py-3 px-4 text-center"><span class="px-2 py-1 rounded-full bg-[#2E7D32]/10 text-[#2E7D32] text-xs font-semibold">Baik</span></td>
+          </tr>
+          <tr class="table-row-hover border-b border-gray-100">
+           <td class="py-3 px-4"><span class="w-8 h-8 inline-flex items-center justify-center rounded-full bg-[#5D1A3B]/10 text-[#5D1A3B] text-xs font-bold">U7</span></td>
+           <td class="py-3 px-4 text-sm text-gray-700">Bagaimana pendapat saudara perilaku petugas dalam pelayanan terkait kesopanan dan keramahan</td>
+           <td class="py-3 px-4 text-right font-semibold">3.264</td>
+           <td class="py-3 px-4 text-center"><span class="px-2 py-1 rounded-full bg-[#2E7D32]/10 text-[#2E7D32] text-xs font-semibold">Baik</span></td>
+          </tr>
+          <tr class="table-row-hover border-b border-gray-100">
+           <td class="py-3 px-4"><span class="w-8 h-8 inline-flex items-center justify-center rounded-full bg-[#5D1A3B]/10 text-[#5D1A3B] text-xs font-bold">U8</span></td>
+           <td class="py-3 px-4 text-sm text-gray-700">Bagaimana pendapat Saudara tentang kualitas sarana dan prasarana</td>
+           <td class="py-3 px-4 text-right font-semibold">3.139</td>
+           <td class="py-3 px-4 text-center"><span class="px-2 py-1 rounded-full bg-[#2E7D32]/10 text-[#2E7D32] text-xs font-semibold">Baik</span></td>
+          </tr>
+          <tr class="table-row-hover border-b border-gray-100 bg-red-50">
+           <td class="py-3 px-4"><span class="w-8 h-8 inline-flex items-center justify-center rounded-full bg-red-500 text-white text-xs font-bold">U9</span></td>
+           <td class="py-3 px-4 text-sm text-gray-700 font-semibold">Bagaimana menurut Saudara tentang transparansi pelayanan di unit ini</td>
+           <td class="py-3 px-4 text-right font-bold text-red-500">2.968 ⬇️</td>
+           <td class="py-3 px-4 text-center"><span class="px-2 py-1 rounded-full bg-red-500 text-white text-xs font-semibold">Terendah</span></td>
+          </tr>
+          <tr class="table-row-hover border-b border-gray-100 bg-[#2E7D32]/5">
+           <td class="py-3 px-4"><span class="w-8 h-8 inline-flex items-center justify-center rounded-full bg-[#2E7D32] text-white text-xs font-bold">U10</span></td>
+           <td class="py-3 px-4 text-sm text-gray-700 font-semibold">Bagaimana pendapat Saudara tentang penanganan pengaduan pengguna layanan</td>
+           <td class="py-3 px-4 text-right font-bold text-[#2E7D32]">3.614 ⬆️</td>
+           <td class="py-3 px-4 text-center"><span class="px-2 py-1 rounded-full bg-[#2E7D32]/80 text-white text-xs font-semibold">Tinggi</span></td>
+          </tr>
+          <tr class="table-row-hover">
+           <td class="py-3 px-4"><span class="w-8 h-8 inline-flex items-center justify-center rounded-full bg-[#5D1A3B]/10 text-[#5D1A3B] text-xs font-bold">U11</span></td>
+           <td class="py-3 px-4 text-sm text-gray-700">Bagaimana integritas petugas pelayanan di unit ini</td>
+           <td class="py-3 px-4 text-right font-semibold">3.118</td>
+           <td class="py-3 px-4 text-center"><span class="px-2 py-1 rounded-full bg-[#2E7D32]/10 text-[#2E7D32] text-xs font-semibold">Baik</span></td>
+          </tr>
+         </tbody>
+        </table>
+       </div>
+      </div>
+     </div><!-- IKM Highlight Card -->
+     <div class="mt-12 highlight-card rounded-2xl p-8 md:p-12 text-white text-center animate-scale-in">
+      <div class="max-w-3xl mx-auto"><span class="inline-block px-4 py-1 rounded-full bg-white/20 text-white text-sm font-semibold mb-6">HASIL KONVERSI IKM</span>
+       <div class="grid grid-cols-1 md:grid-cols-3 gap-8 items-center">
+        <div><span class="block text-white/70 text-sm uppercase tracking-wider mb-2">Nilai IKM</span> <span class="block text-6xl md:text-7xl font-heading font-bold animate-pulse-slow">81,52</span> <span class="text-white/70 text-sm">dari 100</span>
+        </div>
+        <div class="md:border-x md:border-white/20 md:px-8 py-4"><span class="block text-white/70 text-sm uppercase tracking-wider mb-2">Mutu Pelayanan</span> <span class="block text-6xl md:text-7xl font-heading font-bold">B</span> <span class="text-white/70 text-sm">Grade</span>
+        </div>
+        <div><span class="block text-white/70 text-sm uppercase tracking-wider mb-2">Kategori</span>
+         <div class="inline-flex items-center space-x-2 px-6 py-3 bg-white/20 backdrop-blur-sm rounded-full">
+          <svg class="w-6 h-6" fill="currentColor" viewbox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+          </svg><span class="text-2xl font-bold uppercase tracking-wider">BAIK</span>
+         </div>
+        </div>
+       </div>
+      </div>
+     </div>
+    </div>
+   </section><!-- Analisis Section -->
+   <section id="analisis" class="bg-white py-12 md:py-24">
+    <div class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
+     <div class="text-center mb-12"><span class="inline-block px-4 py-1 rounded-full bg-[#5D1A3B]/10 text-[#5D1A3B] text-sm font-semibold mb-4">INTERPRETASI</span>
+      <h2 class="font-heading text-3xl md:text-4xl font-bold text-[#2D2A32] mb-4">Analisis Hasil Survei</h2>
+      <p class="text-gray-600 max-w-2xl mx-auto">Interpretasi komprehensif terhadap hasil survei kepuasan masyarakat</p>
+     </div>
+     <div class="grid grid-cols-1 md:grid-cols-2 gap-8"><!-- Kekuatan -->
+      <div class="stat-card rounded-2xl p-6 card-hover border-l-4 border-[#2E7D32]">
+       <div class="flex items-center space-x-4 mb-6">
+        <div class="w-12 h-12 rounded-xl bg-[#2E7D32]/10 flex items-center justify-center">
+         <svg class="w-6 h-6 text-[#2E7D32]" fill="currentColor" viewbox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+         </svg>
+        </div>
+        <h3 class="font-heading text-xl font-bold text-[#2E7D32]">Kekuatan Pelayanan</h3>
+       </div>
+       <div class="space-y-4">
+        <div class="flex items-start space-x-3"><span class="w-6 h-6 rounded-full bg-[#2E7D32] text-white flex items-center justify-center text-xs flex-shrink-0 mt-0.5">✓</span>
+         <p class="text-gray-700"><strong class="text-[#2E7D32]">Biaya/Tarif (U4)</strong> memperoleh nilai tertinggi (3.620), menunjukkan biaya pelayanan sudah wajar, transparan, dan sesuai ketentuan.</p>
+        </div>
+        <div class="flex items-start space-x-3"><span class="w-6 h-6 rounded-full bg-[#2E7D32] text-white flex items-center justify-center text-xs flex-shrink-0 mt-0.5">✓</span>
+         <p class="text-gray-700"><strong class="text-[#2E7D32]">Penanganan Pengaduan (U10)</strong> dengan nilai 3.614 menunjukkan mekanisme pengaduan berjalan sangat baik dan responsif.</p>
+        </div>
+        <div class="flex items-start space-x-3"><span class="w-6 h-6 rounded-full bg-[#2E7D32] text-white flex items-center justify-center text-xs flex-shrink-0 mt-0.5">✓</span>
+         <p class="text-gray-700"><strong class="text-[#2E7D32]">Kompetensi Petugas (U6)</strong> dengan nilai 3.307 mencerminkan kemampuan dan pengetahuan petugas yang memadai.</p>
+        </div>
+       </div>
+      </div><!-- Area Perbaikan -->
+      <div class="stat-card rounded-2xl p-6 card-hover border-l-4 border-[#C9A227]">
+       <div class="flex items-center space-x-4 mb-6">
+        <div class="w-12 h-12 rounded-xl bg-[#C9A227]/10 flex items-center justify-center">
+         <svg class="w-6 h-6 text-[#C9A227]" fill="currentColor" viewbox="0 0 20 20"><path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd" />
+         </svg>
+        </div>
+        <h3 class="font-heading text-xl font-bold text-[#C9A227]">Prioritas Perbaikan</h3>
+       </div>
+       <div class="space-y-4">
+        <div class="flex items-start space-x-3"><span class="w-6 h-6 rounded-full bg-red-500 text-white flex items-center justify-center text-xs flex-shrink-0 mt-0.5">!</span>
+         <p class="text-gray-700"><strong class="text-red-500">Transparansi Pelayanan (U9)</strong> dengan nilai terendah (2.968) memerlukan peningkatan kejelasan informasi prosedur dan status permohonan.</p>
+        </div>
+        <div class="flex items-start space-x-3"><span class="w-6 h-6 rounded-full bg-[#C9A227] text-white flex items-center justify-center text-xs flex-shrink-0 mt-0.5">!</span>
+         <p class="text-gray-700"><strong class="text-[#C9A227]">Waktu Pelayanan (U3)</strong> dengan nilai 3.095 perlu perhatian lebih karena sebagian masyarakat masih merasakan keterlambatan.</p>
+        </div>
+        <div class="flex items-start space-x-3"><span class="w-6 h-6 rounded-full bg-[#C9A227] text-white flex items-center justify-center text-xs flex-shrink-0 mt-0.5">!</span>
+         <p class="text-gray-700"><strong class="text-[#C9A227]">Sarana dan Prasarana (U8)</strong> dengan nilai 3.139 memerlukan peningkatan kenyamanan ruang dan kelengkapan fasilitas.</p>
+        </div>
+       </div>
+      </div>
+     </div><!-- Summary Box -->
+     <div class="mt-8 bg-gradient-to-r from-[#5D1A3B]/5 to-[#C9A227]/5 rounded-2xl p-6 md:p-8">
+      <div class="flex items-start space-x-4">
+       <div class="w-12 h-12 rounded-xl bg-[#5D1A3B]/10 flex items-center justify-center flex-shrink-0">
+        <svg class="w-6 h-6 text-[#5D1A3B]" fill="currentColor" viewbox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd" />
+        </svg>
+       </div>
+       <div>
+        <h4 class="font-heading text-lg font-bold text-[#2D2A32] mb-2">Ringkasan Analisis</h4>
+        <p class="text-gray-700 leading-relaxed">Hasil survei menunjukkan bahwa <strong>pelayanan Dinas Kependudukan dan Pencatatan Sipil Kabupaten Kepulauan Tanimbar telah berjalan dengan baik</strong> dengan nilai IKM 81,52 (kategori B - BAIK). Kekuatan utama terletak pada kewajaran biaya/tarif dan penanganan pengaduan yang sangat responsif. Namun, <strong>transparansi pelayanan menjadi prioritas utama perbaikan</strong>, karena masyarakat masih membutuhkan kejelasan informasi yang lebih baik. Peningkatan pada aspek waktu pelayanan dan sarana prasarana juga direkomendasikan untuk mencapai kualitas yang lebih optimal.</p>
+       </div>
+      </div>
+     </div>
+    </div>
+   </section><!-- Rekomendasi Section -->
+   <section id="rekomendasi" class="bg-[#F8F6F4] py-12 md:py-24">
+    <div class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
+     <div class="text-center mb-12"><span class="inline-block px-4 py-1 rounded-full bg-[#5D1A3B]/10 text-[#5D1A3B] text-sm font-semibold mb-4">REKOMENDASI</span>
+      <h2 class="font-heading text-3xl md:text-4xl font-bold text-[#2D2A32] mb-4">Kesimpulan &amp; Rekomendasi</h2>
+      <p class="text-gray-600 max-w-2xl mx-auto">Langkah strategis untuk peningkatan kualitas pelayanan publik</p>
+     </div>
+     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"><!-- Card 1 -->
+      <div class="stat-card rounded-2xl p-6 card-hover animate-fade-in-up">
+       <div class="w-14 h-14 rounded-2xl gradient-maroon flex items-center justify-center mb-6">
+        <svg class="w-7 h-7 text-white" fill="currentColor" viewbox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+        </svg>
+       </div>
+       <h3 class="font-heading text-lg font-bold text-[#2D2A32] mb-3">Pertahankan Kualitas</h3>
+       <p class="text-gray-600 text-sm leading-relaxed">Pelayanan publik secara umum telah mencapai kualitas <strong>BAIK</strong>. Pertahankan standar layanan pada unsur-unsur yang telah memperoleh nilai tinggi, khususnya transparansi biaya dan kesesuaian layanan.</p>
+      </div><!-- Card 2 -->
+      <div class="stat-card rounded-2xl p-6 card-hover animate-fade-in-up delay-100">
+       <div class="w-14 h-14 rounded-2xl gradient-gold flex items-center justify-center mb-6">
+        <svg class="w-7 h-7 text-white" fill="currentColor" viewbox="0 0 20 20"><path d="M10 12a2 2 0 100-4 2 2 0 000 4z" /> <path fill-rule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clip-rule="evenodd" />
+        </svg>
+       </div>
+       <h3 class="font-heading text-lg font-bold text-[#2D2A32] mb-3">Tingkatkan Transparansi Pelayanan</h3>
+       <p class="text-gray-600 text-sm leading-relaxed">Prioritaskan peningkatan <strong>kejelasan informasi prosedur, waktu layanan, dan status permohonan</strong> yang terbuka dan mudah diakses masyarakat melalui papan informasi dan sistem digital.</p>
+      </div><!-- Card 3 -->
+      <div class="stat-card rounded-2xl p-6 card-hover animate-fade-in-up delay-200">
+       <div class="w-14 h-14 rounded-2xl bg-[#2E7D32] flex items-center justify-center mb-6">
+        <svg class="w-7 h-7 text-white" fill="currentColor" viewbox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clip-rule="evenodd" />
+        </svg>
+       </div>
+       <h3 class="font-heading text-lg font-bold text-[#2D2A32] mb-3">Optimalisasi Waktu Layanan</h3>
+       <p class="text-gray-600 text-sm leading-relaxed">Evaluasi dan percepat proses pelayanan dengan <strong>digitalisasi prosedur</strong>, penerapan sistem antrian online, dan standarisasi waktu penyelesaian layanan.</p>
+      </div><!-- Card 4 -->
+      <div class="stat-card rounded-2xl p-6 card-hover animate-fade-in-up delay-300">
+       <div class="w-14 h-14 rounded-2xl bg-blue-600 flex items-center justify-center mb-6">
+        <svg class="w-7 h-7 text-white" fill="currentColor" viewbox="0 0 20 20"><path fill-rule="evenodd" d="M11.3 1.046A1 1 0 0112 2v5h4a1 1 0 01.82 1.573l-7 10A1 1 0 018 18v-5H4a1 1 0 01-.82-1.573l7-10a1 1 0 011.12-.38z" clip-rule="evenodd" />
+        </svg>
+       </div>
+       <h3 class="font-heading text-lg font-bold text-[#2D2A32] mb-3">Inovasi Pelayanan</h3>
+       <p class="text-gray-600 text-sm leading-relaxed">Dorong <strong>inovasi berkelanjutan</strong> dalam pelayanan publik melalui adopsi teknologi, simplifikasi prosedur, dan pengembangan layanan berbasis kebutuhan masyarakat.</p>
+      </div><!-- Card 5 -->
+      <div class="stat-card rounded-2xl p-6 card-hover animate-fade-in-up delay-400">
+       <div class="w-14 h-14 rounded-2xl bg-purple-600 flex items-center justify-center mb-6">
+        <svg class="w-7 h-7 text-white" fill="currentColor" viewbox="0 0 20 20"><path d="M10.394 2.08a1 1 0 00-.788 0l-7 3a1 1 0 000 1.84L5.25 8.051a.999.999 0 01.356-.257l4-1.714a1 1 0 11.788 1.838L7.667 9.088l1.94.831a1 1 0 00.787 0l7-3a1 1 0 000-1.838l-7-3zM3.31 9.397L5 10.12v4.102a8.969 8.969 0 00-1.05-.174 1 1 0 01-.89-.89 11.115 11.115 0 01.25-3.762zM9.3 16.573A9.026 9.026 0 007 14.935v-3.957l1.818.78a3 3 0 002.364 0l5.508-2.361a11.026 11.026 0 01.25 3.762 1 1 0 01-.89.89 8.968 8.968 0 00-5.35 2.524 1 1 0 01-1.4 0z" />
+        </svg>
+       </div>
+       <h3 class="font-heading text-lg font-bold text-[#2D2A32] mb-3">Pengembangan SDM</h3>
+       <p class="text-gray-600 text-sm leading-relaxed">Tingkatkan kapasitas SDM pelayanan melalui <strong>pelatihan berkala</strong>, pengembangan soft skills, dan penguatan budaya pelayanan prima.</p>
+      </div><!-- Card 6 -->
+      <div class="stat-card rounded-2xl p-6 card-hover animate-fade-in-up delay-500">
+       <div class="w-14 h-14 rounded-2xl bg-teal-600 flex items-center justify-center mb-6">
+        <svg class="w-7 h-7 text-white" fill="currentColor" viewbox="0 0 20 20"><path fill-rule="evenodd" d="M2.166 4.999A11.954 11.954 0 0010 1.944 11.954 11.954 0 0017.834 5c.11.65.166 1.32.166 2.001 0 5.225-3.34 9.67-8 11.317C5.34 16.67 2 12.225 2 7c0-.682.057-1.35.166-2.001zm11.541 3.708a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+        </svg>
+       </div>
+       <h3 class="font-heading text-lg font-bold text-[#2D2A32] mb-3">Penguatan Keamanan</h3>
+       <p class="text-gray-600 text-sm leading-relaxed">Perkuat aspek <strong>keamanan dan perlindungan data</strong> masyarakat untuk meningkatkan kepercayaan publik terhadap layanan pemerintah.</p>
+      </div>
+     </div><!-- CTA Box -->
+     <div class="mt-12 gradient-maroon rounded-2xl p-8 md:p-12 text-center">
+      <div class="max-w-2xl mx-auto">
+       <h3 class="font-heading text-2xl md:text-3xl font-bold text-white mb-4">Komitmen Peningkatan Berkelanjutan</h3>
+       <p class="text-white/80 mb-6">Hasil survei ini menjadi dasar untuk penyusunan rencana aksi peningkatan kualitas pelayanan publik yang terukur dan berkelanjutan.</p>
+       <div class="flex flex-wrap justify-center gap-4">
+        <div class="flex items-center space-x-2 bg-white/10 backdrop-blur-sm px-4 py-2 rounded-lg">
+         <svg class="w-5 h-5 text-[#C9A227]" fill="currentColor" viewbox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+         </svg><span class="text-white text-sm font-medium">Terukur</span>
+        </div>
+        <div class="flex items-center space-x-2 bg-white/10 backdrop-blur-sm px-4 py-2 rounded-lg">
+         <svg class="w-5 h-5 text-[#C9A227]" fill="currentColor" viewbox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+         </svg><span class="text-white text-sm font-medium">Transparan</span>
+        </div>
+        <div class="flex items-center space-x-2 bg-white/10 backdrop-blur-sm px-4 py-2 rounded-lg">
+         <svg class="w-5 h-5 text-[#C9A227]" fill="currentColor" viewbox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+         </svg><span class="text-white text-sm font-medium">Akuntabel</span>
+        </div>
+       </div>
+      </div>
+     </div>
+    </div>
+   </section><!-- Footer -->
+   <footer class="bg-[#2D2A32] py-8">
+    <div class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
+     <div class="text-center">
+      <p class="text-gray-500 text-sm">© <span id="copyright-year">2025</span> Dinas Kependudukan dan Pencatatan Sipil Kabupaten Kepulauan Tanimbar</p>
+     </div>
+    </div>
+   </footer>
+  </div>
+  <script>
+    // Default configuration
+    const defaultConfig = {
+      main_title: 'Laporan Hasil Survei Kepuasan Masyarakat',
+      subtitle: 'Dinas Kependudukan dan Pencatatan Sipil Kabupaten Kepulauan Tanimbar',
+      institution_name: 'Disdukcapil Kab. Kepulauan Tanimbar',
+      report_year: '2025',
+      report_period: 'Triwulan IV',
+      background_color: '#F8F6F4',
+      primary_color: '#5D1A3B',
+      text_color: '#2D2A32',
+      accent_color: '#C9A227',
+      success_color: '#2E7D32'
+    };
+
+    let config = { ...defaultConfig };
+    let genderChart = null;
+    let nrrChart = null;
+
+    // Initialize charts
+    function initCharts() {
+      // Gender Pie Chart
+      const genderCtx = document.getElementById('genderChart');
+      if (genderCtx) {
+        genderChart = new Chart(genderCtx, {
+          type: 'doughnut',
+          data: {
+            labels: ['Laki-laki', 'Perempuan'],
+            datasets: [{
+              data: [167, 273],
+              backgroundColor: [
+                config.primary_color || defaultConfig.primary_color,
+                config.accent_color || defaultConfig.accent_color
+              ],
+              borderWidth: 0,
+              hoverOffset: 10
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: true,
+            cutout: '65%',
+            plugins: {
+              legend: {
+                display: false
+              }
+            }
+          }
+        });
+      }
+
+      // NRR Bar Chart
+      const nrrCtx = document.getElementById('nrrChart');
+      if (nrrCtx) {
+        const nrrData = [3.277, 3.220, 3.095, 3.620, 3.248, 3.307, 3.264, 3.139, 2.968, 3.614, 3.118];
+        const bgColors = nrrData.map((val, idx) => {
+          if (idx === 3 || idx === 9) return config.success_color || defaultConfig.success_color;
+          if (idx === 8) return '#EF4444';
+          return config.primary_color || defaultConfig.primary_color;
+        });
+
+        nrrChart = new Chart(nrrCtx, {
+          type: 'bar',
+          data: {
+            labels: ['U1', 'U2', 'U3', 'U4', 'U5', 'U6', 'U7', 'U8', 'U9', 'U10', 'U11'],
+            datasets: [{
+              label: 'NRR',
+              data: nrrData,
+              backgroundColor: bgColors,
+              borderRadius: 8,
+              borderSkipped: false
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+              y: {
+                beginAtZero: false,
+                min: 2.5,
+                max: 4,
+                grid: {
+                  color: 'rgba(0,0,0,0.05)'
+                },
+                ticks: {
+                  font: {
+                    size: window.innerWidth < 640 ? 10 : 12
+                  }
+                }
+              },
+              x: {
+                grid: {
+                  display: false
+                },
+                ticks: {
+                  font: {
+                    size: window.innerWidth < 640 ? 10 : 12
+                  }
+                }
+              }
+            },
+            plugins: {
+              legend: {
+                display: false
+              },
+              tooltip: {
+                backgroundColor: config.primary_color || defaultConfig.primary_color,
+                padding: 12,
+                cornerRadius: 8,
+                titleFont: {
+                  size: 14,
+                  weight: 'bold'
+                }
+              }
+            }
+          }
+        });
+      }
+    }
+
+    // Update UI based on config
+    async function onConfigChange(cfg) {
+      config = { ...defaultConfig, ...cfg };
+
+      // Update text content
+      const heroTitle = document.getElementById('hero-title');
+      if (heroTitle) heroTitle.textContent = config.main_title || defaultConfig.main_title;
+
+      const heroSubtitle = document.getElementById('hero-subtitle');
+      if (heroSubtitle) heroSubtitle.textContent = config.subtitle || defaultConfig.subtitle;
+
+      const copyrightYear = document.getElementById('copyright-year');
+      if (copyrightYear) copyrightYear.textContent = config.report_year || defaultConfig.report_year;
+
+      // Update chart colors if charts exist
+      if (genderChart) {
+        genderChart.data.datasets[0].backgroundColor = [
+          config.primary_color || defaultConfig.primary_color,
+          config.accent_color || defaultConfig.accent_color
+        ];
+        genderChart.update();
+      }
+
+      if (nrrChart) {
+        const nrrData = [3.277, 3.220, 3.095, 3.620, 3.248, 3.307, 3.264, 3.139, 2.968, 3.614, 3.118];
+        nrrChart.data.datasets[0].backgroundColor = nrrData.map((val, idx) => {
+          if (idx === 3 || idx === 9) return config.success_color || defaultConfig.success_color;
+          if (idx === 8) return '#EF4444';
+          return config.primary_color || defaultConfig.primary_color;
+        });
+        nrrChart.update();
+      }
+    }
+
+    // Map config to capabilities
+    function mapToCapabilities(cfg) {
+      return {
+        recolorables: [
+          {
+            get: () => cfg.background_color || defaultConfig.background_color,
+            set: (value) => {
+              cfg.background_color = value;
+              if (window.elementSdk) window.elementSdk.setConfig({ background_color: value });
+            }
+          },
+          {
+            get: () => cfg.primary_color || defaultConfig.primary_color,
+            set: (value) => {
+              cfg.primary_color = value;
+              if (window.elementSdk) window.elementSdk.setConfig({ primary_color: value });
+            }
+          },
+          {
+            get: () => cfg.text_color || defaultConfig.text_color,
+            set: (value) => {
+              cfg.text_color = value;
+              if (window.elementSdk) window.elementSdk.setConfig({ text_color: value });
+            }
+          },
+          {
+            get: () => cfg.accent_color || defaultConfig.accent_color,
+            set: (value) => {
+              cfg.accent_color = value;
+              if (window.elementSdk) window.elementSdk.setConfig({ accent_color: value });
+            }
+          },
+          {
+            get: () => cfg.success_color || defaultConfig.success_color,
+            set: (value) => {
+              cfg.success_color = value;
+              if (window.elementSdk) window.elementSdk.setConfig({ success_color: value });
+            }
+          }
+        ],
+        borderables: [],
+        fontEditable: undefined,
+        fontSizeable: undefined
+      };
+    }
+
+    // Map config to edit panel values
+    function mapToEditPanelValues(cfg) {
+      return new Map([
+        ['main_title', cfg.main_title || defaultConfig.main_title],
+        ['subtitle', cfg.subtitle || defaultConfig.subtitle],
+        ['institution_name', cfg.institution_name || defaultConfig.institution_name],
+        ['report_year', cfg.report_year || defaultConfig.report_year],
+        ['report_period', cfg.report_period || defaultConfig.report_period]
+      ]);
+    }
+
+    // Initialize SDK
+    if (window.elementSdk) {
+      window.elementSdk.init({
+        defaultConfig,
+        onConfigChange,
+        mapToCapabilities,
+        mapToEditPanelValues
+      });
+    }
+
+    // Initialize charts after DOM is ready
+    document.addEventListener('DOMContentLoaded', function() {
+      initCharts();
+      
+      // Smooth scroll for navigation
+      document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function(e) {
+          e.preventDefault();
+          const target = document.querySelector(this.getAttribute('href'));
+          if (target) {
+            target.scrollIntoView({
+              behavior: 'smooth',
+              block: 'start'
+            });
+          }
+        });
+      });
+
+      // Intersection Observer for animations
+      const observerOptions = {
+        threshold: 0.1,
+        rootMargin: '0px 0px -50px 0px'
+      };
+
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.style.opacity = '1';
+            entry.target.style.transform = 'translateY(0)';
+          }
+        });
+      }, observerOptions);
+
+      document.querySelectorAll('.animate-fade-in-up, .animate-slide-in-left, .animate-scale-in').forEach(el => {
+        el.style.opacity = '0';
+        observer.observe(el);
+      });
+    });
+  </script>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9c15695a13e6be7b',t:'MTc2ODk4MzgyOC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
